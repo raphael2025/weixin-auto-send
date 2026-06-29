@@ -96,6 +96,36 @@ if not res["ok"]:
 
 See [`examples/alert_example.py`](examples/alert_example.py).
 
+## Use as an MCP server (multi-AI)
+
+Expose sending as an **MCP tool** so any MCP-capable AI (Claude Desktop, Claude Code, Cursor, agents…) can use it. [`wechat_mcp.py`](wechat_mcp.py) wraps the sender.
+
+1. Install the SDK (the core sender stays zero-dep):
+   ```bash
+   pip install mcp
+   ```
+2. Point your MCP client at `wechat_mcp.py`.
+
+**Claude Desktop** — `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "weixin": {
+      "command": "C:\\path\\to\\weixin-auto-send\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\path\\to\\weixin-auto-send\\wechat_mcp.py"]
+    }
+  }
+}
+```
+
+**Claude Code**:
+```bash
+claude mcp add weixin -- C:\path\to\weixin-auto-send\.venv\Scripts\python.exe C:\path\to\weixin-auto-send\wechat_mcp.py
+```
+
+Exposed tool: **`wechat_send_message(to, message, kind="any", dry_run=True)`**.
+`dry_run` defaults to **True** (preview only — finds the target and reports who it *would* send to, without sending). The AI must pass `dry_run=False` to actually deliver — a safe default when multiple agents can call it.
+
 ## Anti-misfire (why it rarely sends to the wrong person)
 
 1. **Section filtering** — WeChat groups results into *Frequently used / Contacts / Groups / Chat history / Files / Functions…*. The tool only matches the first three, skipping *Chat history / Files / Functions* (the last is what turns "File Transfer" into a special popup).
