@@ -96,6 +96,36 @@ if not res["ok"]:
 
 见 [`examples/alert_example.py`](examples/alert_example.py)。
 
+## 作为 MCP server 使用(多 AI 接入)
+
+把"发微信"暴露成 **MCP 工具**,任何支持 MCP 的 AI(Claude Desktop、Claude Code、Cursor、各类 agent…)都能调用。封装见 [`wechat_mcp.py`](wechat_mcp.py)。
+
+1. 装 SDK(核心工具仍零依赖):
+   ```bash
+   pip install mcp
+   ```
+2. 让你的 MCP 客户端启动 `wechat_mcp.py`。
+
+**Claude Desktop** —— `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "weixin": {
+      "command": "C:\\path\\to\\weixin-auto-send\\.venv\\Scripts\\python.exe",
+      "args": ["C:\\path\\to\\weixin-auto-send\\wechat_mcp.py"]
+    }
+  }
+}
+```
+
+**Claude Code**:
+```bash
+claude mcp add weixin -- C:\path\to\weixin-auto-send\.venv\Scripts\python.exe C:\path\to\weixin-auto-send\wechat_mcp.py
+```
+
+暴露的工具:**`wechat_send_message(to, message, kind="any", dry_run=True)`**。
+`dry_run` 默认 **True**(只预览:找到目标并报告"将发给谁",不真发)。AI 必须显式传 `dry_run=False` 才真正发送 —— 多个 agent 都能调用时这是更安全的默认。
+
 ## 防发错人机制
 
 1. **区块过滤** —— 微信把结果分「最常使用/联系人/群聊/聊天记录/聊天文件/功能…」。工具只在前三类匹配,跳过「聊天记录/聊天文件/功能」(后者正是把"文件传输助手"开成特殊弹窗的陷阱)。
