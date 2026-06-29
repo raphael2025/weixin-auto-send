@@ -33,7 +33,7 @@ HELPER = str(Path(__file__).with_name("wx_helper.ps1"))
 SEARCH_BOX_DX, SEARCH_BOX_DY = 160, 55      # 搜索框点击点(逻辑像素, 相对窗口左上)
 RESULTS_DX, RESULTS_W = 100, 250            # OCR 结果列文字区(逻辑像素, 跳过头像列)
 RESULTS_DY = 78                             # 结果区顶部(逻辑像素); 高度运行时动态算到窗口底部
-TITLE_DX, TITLE_DY, TITLE_W, TITLE_H = 345, 8, 460, 44  # 聊天标题区(逻辑像素)
+TITLE_DX, TITLE_DY, TITLE_W, TITLE_H = 300, 28, 430, 44  # 聊天标题区(逻辑像素, 标题约在相对 324,48)
 INPUT_RX, INPUT_DY = 0.55, 60               # 输入框: x=窗口宽*0.55(落在聊天区), y=底部上方逻辑像素
 T_AFTER_SEARCH = 1.2                         # 输入后等下拉框
 T_AFTER_OPEN = 1.0                           # 点开聊天后等加载
@@ -203,8 +203,8 @@ def pick_target(lines, target, allowed):
             continue
         if section in BAD_SECTIONS and section not in allowed:   # 坏区块(除非显式允许, 如文件传输助手的「功能」)
             continue
-        if saw_good_section and section is not None and section not in allowed:
-            continue                          # 有分区时, 只在允许分区里找
+        if saw_good_section and section not in allowed:
+            continue                          # 有分区时只认允许分区(含排除无归属的搜索建议行)
         if is_noise(r["text"]) or in_zones(r["cy"], zones):
             continue
         s = score(target, r["text"])
