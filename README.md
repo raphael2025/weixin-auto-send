@@ -45,10 +45,10 @@ find & wake the WeChat window (incl. tray-hidden) and force it on top
 
 ```bash
 # Preview (dry-run, default): opens the chat & confirms the title, but does NOT send
-python wechat_send.py --to "Project Team" --msg "Miner #3 offline" --type group
+python wechat_send.py --to "Team Group" --msg "Server #3 is down" --type group
 
 # Actually send: add --send
-python wechat_send.py --to "Project Team" --msg "Miner #3 offline, please check" --type group --send
+python wechat_send.py --to "Team Group" --msg "Server #3 is down, please check" --type group --send
 
 # Safest live test — send to yourself (File Transfer):
 python wechat_send.py --to "文件传输助手" --msg "test" --send
@@ -58,10 +58,10 @@ Example output:
 
 ```
 [1] WeChat window: 1669x1075 @ (806,50), DPI x1.0
-[2] Searched: "Project Team" (fuzzy)
-[3] Matched: "Project Team Ops Group" (score 0.80)
-[4] Chat title: "Project Team Ops Group (25)" (score vs target 0.62)
-[5] Sent to "Project Team Ops Group (25)": Miner #3 offline, please check
+[2] Searched: "Team Group" (fuzzy)
+[3] Matched: "Project Team Group" (score 0.80)
+[4] Chat title: "Project Team Group (25)" (score vs target 0.62)
+[5] Sent to "Project Team Group (25)": Server #3 is down, please check
 ```
 
 ## CLI
@@ -83,8 +83,8 @@ import sys; sys.path.insert(0, r"path/to/weixin-auto-send")
 from wechat_send import send_message
 
 res = send_message(
-    to="Project Team",     # fuzzy name
-    msg="⚠️ Miner S19 #3 offline",
+    to="Team Group",       # fuzzy name
+    msg="⚠️ Server web-3 is down",
     kind="group",          # any / contact / group
     send=True,             # False = preview
     confirm_title=True,    # keep the title double-check on

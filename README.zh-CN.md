@@ -45,10 +45,10 @@
 
 ```bash
 # 预览(dry-run,默认):打开聊天+确认标题,但【不发送】
-python wechat_send.py --to "云海场地" --msg "矿机#3离线" --type group
+python wechat_send.py --to "工作群" --msg "服务器 #3 离线" --type group
 
 # 真正发送:加 --send
-python wechat_send.py --to "云海场地" --msg "矿机#3离线,请检查" --type group --send
+python wechat_send.py --to "工作群" --msg "服务器 #3 离线,请检查" --type group --send
 
 # 最安全的真发测试 —— 发给自己(文件传输助手):
 python wechat_send.py --to "文件传输助手" --msg "测试" --send
@@ -58,10 +58,10 @@ python wechat_send.py --to "文件传输助手" --msg "测试" --send
 
 ```
 [1] 微信窗口: 1669x1075 @ (806,50), DPI×1.0
-[2] 已搜索: 「云海场地」(模糊)
-[3] 命中结果: 「云海场地一二期运维沟通群」 (相似度 0.80)
-[4] 聊天标题: 「云海场地一二期运维沟通群(25)」 (与目标相似度 0.62)
-[5] 已发送给「云海场地一二期运维沟通群(25)」: 矿机#3离线,请检查
+[2] 已搜索: 「工作群」(模糊)
+[3] 命中结果: 「项目协作工作群」 (相似度 0.80)
+[4] 聊天标题: 「项目协作工作群(25)」 (与目标相似度 0.62)
+[5] 已发送给「项目协作工作群(25)」: 服务器 #3 离线,请检查
 ```
 
 ## 命令行参数
@@ -83,8 +83,8 @@ import sys; sys.path.insert(0, r"path/to/weixin-auto-send")
 from wechat_send import send_message
 
 res = send_message(
-    to="云海场地",         # 模糊名
-    msg="⚠️ 矿机 S19 #3 离线",
+    to="工作群",           # 模糊名
+    msg="⚠️ 服务器 web-3 离线",
     kind="group",          # any / contact / group
     send=True,             # False=预览
     confirm_title=True,    # 保持标题二次确认
