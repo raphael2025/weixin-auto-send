@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# OCR / runtime temp
+wx_shotocr_*.png
+*.tmp
+
+# Screenshots / scratch
+scratch/
+*.local.*
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
