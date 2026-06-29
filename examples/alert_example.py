@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Example: push an alert to a WeChat group/contact.
-示例:把一条告警推送到微信群/联系人(例如矿机监控告警)。
+示例:把一条告警推送到微信群/联系人(例如服务器/设备监控告警)。
 
 Run from the repo root:  python examples/alert_example.py
 """
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # Dry-run by default so the example is safe to run as-is.
     notify(
         target="文件传输助手",      # group or contact name (fuzzy)
-        text="⚠️ Demo alert: miner S19 #3 offline",
+        text="⚠️ Demo alert: server #3 is offline",
         kind="any",                  # "any" | "contact" | "group"
         send=False,                  # change to True to actually send
     )
