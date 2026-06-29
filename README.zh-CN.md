@@ -126,6 +126,31 @@ claude mcp add weixin -- C:\path\to\weixin-auto-send\.venv\Scripts\python.exe C:
 暴露的工具:**`wechat_send_message(to, message, kind="any", dry_run=True)`**。
 `dry_run` 默认 **True**(只预览:找到目标并报告"将发给谁",不真发)。AI 必须显式传 `dry_run=False` 才真正发送 —— 多个 agent 都能调用时这是更安全的默认。
 
+## 从任意 agent 调用(HTTP API / CLI)
+
+对于**不是 MCP 客户端**的框架(OpenClaw、Hermes Agent、n8n、shell 脚本、任意语言),起一个零依赖的本地 **HTTP 服务**(同样纯标准库):
+
+```bash
+python wechat_http.py        # http://127.0.0.1:8765  (仅本机)
+```
+
+之后任何能发 HTTP 请求的东西都能发消息:
+```bash
+curl -X POST http://127.0.0.1:8765/send \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d '{"to":"工作群","message":"hi","kind":"group","dry_run":false}'
+# GET /health 做存活检查
+```
+
+- 请求体:`to`(必填)、`message`(必填)、`kind`(`any`/`contact`/`group`)、`dry_run`(默认 `false`)、`confirm_title`(默认 `true`)。
+- 返回与 CLI/MCP 相同的结果 dict。成功 HTTP `200`,失败 `422`。
+- 可选鉴权:设环境变量 `WX_API_TOKEN`,请求带 `X-Token: <token>` 头。改监听地址用 `WX_API_HOST` / `WX_API_PORT`。
+
+或者,任何能跑命令的 agent 直接调 CLI:
+```bash
+python wechat_send.py --to "工作群" --msg "hi" --type group --send
+```
+
 ## 防发错人机制
 
 1. **区块过滤** —— 微信把结果分「最常使用/联系人/群聊/聊天记录/聊天文件/功能…」。工具只在前三类匹配,跳过「聊天记录/聊天文件/功能」(后者正是把"文件传输助手"开成特殊弹窗的陷阱)。

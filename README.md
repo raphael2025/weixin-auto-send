@@ -126,6 +126,31 @@ claude mcp add weixin -- C:\path\to\weixin-auto-send\.venv\Scripts\python.exe C:
 Exposed tool: **`wechat_send_message(to, message, kind="any", dry_run=True)`**.
 `dry_run` defaults to **True** (preview only — finds the target and reports who it *would* send to, without sending). The AI must pass `dry_run=False` to actually deliver — a safe default when multiple agents can call it.
 
+## Use from any agent (HTTP API / CLI)
+
+For agents/frameworks that are **not** MCP clients (OpenClaw, Hermes Agent, n8n, shell scripts, any language), run the tiny local **HTTP API** — also zero-dependency (stdlib only):
+
+```bash
+python wechat_http.py        # http://127.0.0.1:8765  (localhost only)
+```
+
+Then anything that can make an HTTP request can send:
+```bash
+curl -X POST http://127.0.0.1:8765/send \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d '{"to":"Team Group","message":"hi","kind":"group","dry_run":false}'
+# GET /health for a liveness check
+```
+
+- Body: `to` (required), `message` (required), `kind` (`any`/`contact`/`group`), `dry_run` (default `false`), `confirm_title` (default `true`).
+- Returns the same result dict as the CLI/MCP. HTTP `200` on `ok`, `422` on failure.
+- Optional auth: set env `WX_API_TOKEN` and send header `X-Token: <token>`. Change bind with `WX_API_HOST` / `WX_API_PORT`.
+
+Or, for any agent that can run a shell command, call the CLI directly:
+```bash
+python wechat_send.py --to "Team Group" --msg "hi" --type group --send
+```
+
 ## Anti-misfire (why it rarely sends to the wrong person)
 
 1. **Section filtering** — WeChat groups results into *Frequently used / Contacts / Groups / Chat history / Files / Functions…*. The tool only matches the first three, skipping *Chat history / Files / Functions* (the last is what turns "File Transfer" into a special popup).
